@@ -69,18 +69,18 @@ oc cluster-info
 
 ```bash
 # Clone the repository
-git clone https://github.com/osac-project/fulfillment-cli.git
-cd fulfillment-cli
+git clone https://github.com/osac-project/fulfillment-service.git
+cd fulfillment-service
 
 # Check the Go module configuration
 cat go.mod
-# Expected to see: module github.com/osac-project/fulfillment-cli
+# Expected to see: module github.com/osac-project/fulfillment-service
 
 # Download dependencies
 go mod download
 
 # Build the CLI with optimizations
-go build -ldflags "-X main.version=$(git describe --tags --always)" -o fulfillment-cli .
+go build -ldflags "-X github.com/osac-project/fulfillment-service/internal/version.id=$(git describe --tags --always)" -o fulfillment-cli ./cmd/fulfillment-cli
 
 # Verify the build
 ./fulfillment-cli --help
@@ -130,16 +130,16 @@ mkdir -p ~/workspace/fulfillment
 cd ~/workspace/fulfillment
 
 # Clone related repositories
-git clone https://github.com/osac-project/fulfillment-cli.git
+git clone https://github.com/osac-project/fulfillment-service.git
 git clone https://github.com/osac-project/osac-installer.git
 
 # Set up development environment variables
-export FULFILLMENT_CLI_ROOT=~/workspace/fulfillment/fulfillment-cli
+export FULFILLMENT_CLI_ROOT=~/workspace/fulfillment/fulfillment-service
 export OSAC_INSTALLER_ROOT=~/workspace/fulfillment/osac-installer
 export KUBECONFIG=~/workspace/fulfillment/kubeconfig
 
 # Add to ~/.bashrc for persistence
-echo 'export FULFILLMENT_CLI_ROOT=~/workspace/fulfillment/fulfillment-cli' >> ~/.bashrc
+echo 'export FULFILLMENT_CLI_ROOT=~/workspace/fulfillment/fulfillment-service' >> ~/.bashrc
 echo 'export OSAC_INSTALLER_ROOT=~/workspace/fulfillment/osac-installer' >> ~/.bashrc
 ```
 
@@ -419,7 +419,7 @@ graph TD
 - **Compression**: gzip compression for request/response bodies
 
 ```go
-// Example from fulfillment-cli source code
+// Example from fulfillment-service source code
 transportCreds = experimentalcredentials.NewTLSWithALPNDisabled(tlsConfig)
 ```
 
@@ -1337,7 +1337,7 @@ variables:
   KUBECONFIG_PATH: "/tmp/kubeconfig"
 
 before_script:
-  - curl -L "https://github.com/osac-project/fulfillment-cli/releases/download/${FULFILLMENT_CLI_VERSION}/fulfillment-cli-linux-amd64" -o fulfillment-cli
+  - curl -L "https://github.com/osac-project/fulfillment-service/releases/download/${FULFILLMENT_CLI_VERSION}/fulfillment-cli_Linux_x86_64" -o fulfillment-cli
   - chmod +x fulfillment-cli
   - mkdir -p ~/.config/fulfillment-cli
   - echo "$FULFILLMENT_CLI_CONFIG" > ~/.config/fulfillment-cli/config.json

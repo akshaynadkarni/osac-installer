@@ -179,7 +179,7 @@ Download the latest release and make it executable.
 ```bash
 # Adjust URL for the latest version as needed
 $ curl -L -o fulfillment-cli \
-    https://github.com/osac/fulfillment-cli/releases/latest/download/fulfillment-cli-linux-amd64
+    https://github.com/osac-project/fulfillment-service/releases/latest/download/fulfillment-cli_Linux_x86_64
 $ chmod +x fulfillment-cli
 
 # Optional: Move to your path
@@ -225,7 +225,7 @@ $ fulfillment-cli create hub \
 
 Once configured, you can use the fulfillment CLI to manage clusters and virtual machines.
 For detailed usage instructions and command reference, see the
-[fulfillment-cli documentation](https://github.com/osac/fulfillment-cli).
+[fulfillment-cli documentation](https://github.com/osac-project/fulfillment-service).
 
 ## Accessing Ansible Automation Platform
 
