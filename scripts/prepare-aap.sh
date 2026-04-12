@@ -4,7 +4,12 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-INSTALLER_NAMESPACE=${INSTALLER_NAMESPACE:-"osac-devel"}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib.sh"
+
+INSTALLER_KUSTOMIZE_OVERLAY=${INSTALLER_KUSTOMIZE_OVERLAY:-"development"}
+INSTALLER_NAMESPACE=${INSTALLER_NAMESPACE:-$(grep "^namespace:" "overlays/${INSTALLER_KUSTOMIZE_OVERLAY}/kustomization.yaml" | awk '{print $2}')}
+[[ -z "${INSTALLER_NAMESPACE}" ]] && echo "ERROR: Could not determine namespace from overlays/${INSTALLER_KUSTOMIZE_OVERLAY}/kustomization.yaml" && exit 1
 
 # Get the AAP gateway route URL
 AAP_ROUTE_HOST=$(oc get routes -n ${INSTALLER_NAMESPACE} --no-headers | awk '$1 ~ /osac-aap/ {print $2; exit}')

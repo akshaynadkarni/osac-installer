@@ -43,7 +43,7 @@ if [[ "${STORAGE_SERVICE}" == "true" ]]; then
         echo "Timed out waiting for LVMS CSV to exist"
         exit 1
     }
-    LVMS_CSV=$(oc get csv --no-headers -n openshift-storage | awk '/lvms/ { print $1 }')
+    LVMS_CSV=$(oc get csv --no-headers -n openshift-storage | awk '/lvms/ { print $1 }' | tail -1)
     wait_for_resource clusterserviceversion/${LVMS_CSV} jsonpath='{.status.phase}'=Succeeded 300 openshift-storage
     wait_for_resource deployment/lvms-operator condition=Available 300 openshift-storage
 
@@ -67,7 +67,7 @@ if [[ "${INGRESS_SERVICE}" == "true" ]]; then
         echo "Timed out waiting for MetalLB CSV to exist"
         exit 1
     }
-    METALLB_CSV=$(oc get csv --no-headers -n metallb-system | awk '/metallb/ { print $1 }')
+    METALLB_CSV=$(oc get csv --no-headers -n metallb-system | awk '/metallb/ { print $1 }' | tail -1)
     wait_for_resource clusterserviceversion/${METALLB_CSV} jsonpath='{.status.phase}'=Succeeded 300 metallb-system
     wait_for_resource deployment/metallb-operator-controller-manager condition=Available 300 metallb-system
     wait_for_resource deployment/metallb-operator-webhook-server condition=Available 300 metallb-system
@@ -85,7 +85,7 @@ if [[ "${MCE_SERVICE}" == "true" ]]; then
         echo "Timed out waiting for MCE CSV to exist"
         exit 1
     }
-    MCE_CSV=$(oc get csv --no-headers -n multicluster-engine | awk '/multicluster-engine/ { print $1 }')
+    MCE_CSV=$(oc get csv --no-headers -n multicluster-engine | awk '/multicluster-engine/ { print $1 }' | tail -1)
     wait_for_resource clusterserviceversion/${MCE_CSV} jsonpath='{.status.phase}'=Succeeded 600 multicluster-engine
 
     # Create MultiClusterEngine if one doesn't already exist (only one instance is allowed)
@@ -156,7 +156,6 @@ if [[ "${VIRT_SERVICE}" == "true" ]]; then
 fi
 
 # Apply cert-manager prerequisites and wait for it to be ready
-oc apply -k prerequisites/cert-manager
 retry_until 300 3 '[[ -n "$(oc get crd --ignore-not-found certmanagers.operator.openshift.io)" ]]' 'oc apply -k prerequisites/cert-manager || true' || {
     echo "Timed out waiting for cert-manager CRD to exist"
     exit 1
@@ -179,7 +178,7 @@ retry_until 300 3 '[[ -n "$(oc get csv --no-headers -n openshift-operators | gre
     echo "Timed out waiting for authorino CSV to exist"
     exit 1
 }
-AUTHORINO_CSV=$(oc get csv --no-headers -n openshift-operators | awk '/authorino/ { print $1 }')
+AUTHORINO_CSV=$(oc get csv --no-headers -n openshift-operators | awk '/authorino/ { print $1 }' | tail -1)
 wait_for_resource clusterserviceversion/${AUTHORINO_CSV} jsonpath='{.status.phase}'=Succeeded 300 openshift-operators
 wait_for_resource deployment/authorino-operator condition=Available 300 openshift-operators
 
@@ -195,7 +194,7 @@ retry_until 300 3 '[[ -n "$(oc get csv --no-headers -n ansible-aap | grep aap)" 
     echo "Timed out waiting for AAP CSV to exist"
     exit 1
 }
-AAP_CSV=$(oc get csv --no-headers -n ansible-aap | awk '/aap/ { print $1 }')
+AAP_CSV=$(oc get csv --no-headers -n ansible-aap | awk '/aap/ { print $1 }' | tail -1)
 wait_for_resource clusterserviceversion/${AAP_CSV} jsonpath='{.status.phase}'=Succeeded 300 ansible-aap
 wait_for_resource deployment/automation-controller-operator-controller-manager condition=Available 300 ansible-aap
 
