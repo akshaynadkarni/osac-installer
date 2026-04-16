@@ -99,6 +99,24 @@ rules:
       - secrets
     verbs:
       - create
+  - apiGroups:
+      - osac.openshift.io
+    resources:
+      - publicippools
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - osac.openshift.io
+    resources:
+      - publicippools/status
+    verbs:
+      - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
